@@ -1,0 +1,79 @@
+---
+title: "Creux_26-4-17"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+### 3.2.4 Exercises 
+1. Run ggplot(data=mpg)  
+I don't see anything
+
+2. There are 234 rows and 11 columns
+
+3. The drv variable discribes the type of drive for the car, front wheel or four wheel drive
+
+4. Scatter plot  of hwy vs cyl
+
+```{r mpg, echo=FALSE}
+ ggplot(data=mpg) + geom_point(mapping = aes(x=cyl, y=hwy))
+```
+5. 
+```{r}
+ ggplot(data=mpg) + geom_point(mapping = aes(x=drv, y=class))
+```
+
+This plot is not useful because this does not give information about how many cars are in category for each class
+
+### 3.3.1 Exercises
+1. The second last bracket is in the wrong place it should read: 
+ggplot(data=mpg) + geom_point(mapping = aes(x=displ, y=hwy), color="blue")
+
+2.continuous - hwy, cty, displ, year, cyl; Categorical - manufacturer model, trans, drv, fl, class
+
+3. 
+```{r}
+ggplot(data=mpg) + geom_point(mapping = aes(x=displ, y=hwy, color= displ, size=hwy, shape=class))
+```
+
+Yes, Shape cannot be used with continuous data
+
+4. you can quickly see trends
+
+5. Use the stroke aesthetic to modify the width of the border in shapes that have a border like shape 21
+
+6. It colors everything in dipl lower than 5 one color and everything higher than 5 another color and marks the lower than five set as true and the higher than five set as false
+
+### 3.5.1 Exercises
+1. Faceting a continuous variable leads to it being broken into discrete values
+
+2. The empty cells mean that there were no cars that had that number of cylinders in that specific drive category, they are the missing data points on the ggplot(data=mpg) + geom_point(mapping = aes(x=drv, y=cyl)) plot
+
+3. 
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+```
+
+And
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+```
+
+using this code the facets the data accourding to the descrete category listed the . is a place holder so that you only facet by a single variable and not for both columns and rows.
+
+4. The advantages of faceting is that you can clearly look at the hwy and displ for each class of car to see how they perfom in a single graph.In a larger dataset in may produce too many facets and it may become difficult to quickly asses the different classes and then a color graph might be easier to quickly see the differences.
+
+5. nrow allows the user to control the number of rows in the facet and ncol the number of columns. other options controlling the layout of individual panels includes; scales, shrink, labeller, as.table, swtich, drop, dir, strip.position. Facet_grid does not specify rows or columns because you are faceting according to the discrete categories in the data and these will dictate the number of rows or columns
+
+6. you should always put the variable with more unique levels in the column place because it fits better
+
