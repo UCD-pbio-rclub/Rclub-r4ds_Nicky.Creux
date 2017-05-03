@@ -1,0 +1,128 @@
+---
+title: "Creux_3-5-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+### Rclub Home Work 3-5-2017
+
+####Exercises 3.6.1
+1. geom_line(), geom_boxplot(), geom_histogram(), geom_area()
+2. The prediction of this code is a graph of points mapping displ on the x-axis and hwy on the y-axis and these points will be colored according to thr drv of the cars. the smooth_geom will not be displayed.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+3. Show.ledeng = FALSE stops the ledgens of a specific geom from showing in the plot. The geom_smooth will be added to the legend. You might not want all geoms added to the legend.
+4. The se argument maps or removes the confidence interval of the smoothed line
+5. Yes these two graphs will look the same. one just maps the functions globaly for both geoms and the other code maps localy for each geom.
+6.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(se=FALSE)
+
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, group=drv)) + geom_point() +   geom_smooth(se=FALSE)
+```
+
+```{r}
+ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, group=drv)) + geom_point(mapping = aes(color = drv)) +   geom_smooth(mapping = aes (color = drv), se=FALSE)
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + geom_point(mapping = aes(color=drv)) + geom_smooth(se=FALSE)
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, group=drv)) + geom_point(mapping = aes(color=drv)) +   geom_smooth(mapping = aes(linetype = drv), se=FALSE)
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, group=drv)) + geom_point(mapping = aes(color=drv))
+```
+
+####Exercises 3.7.1
+1. geom_histogram/geom_freqpoly are the geoms accosiated with stat_summary. I think you can switch stat_summary with geom_histogram
+2.  geom_bar makes the height of the bar proportional to the number of cases. geom_col uses the heights of the bars to represent values in the data
+3. list of stat and geom pairs:
+  * stat_bin - geom_histogram/geom_freqpoly
+  * stat_boxplot - geom_boxplot
+  * stat_contour - geom_contour/geom_tile
+  * stat_count - geom_bar/geom/col
+  * stat_density - geom_density
+  * stat_smooth - geom_smooth
+  * stat_spoke - geom_spoke
+  * stat_sum - geom_count
+4. stat_smooth computes the predicted variable, the min and max around the mean and the standard error. parameters controling this are the smoothing method and size of the largest group in the dataset
+5. We need to specify group 1 so that each bar is made proportional to the first group. if we do not specify this it looks like in these two example graphs each group is proportional to itself so everything looks the same. and is not a comparison across groups.
+
+####Exercises 3.8.1
+1. This plot likely has over plotting so we cannot see the full ispread of the data. using the position = "jitter" function will help separate the points.
+2. The ammount of jittering is controled in the horizontal and vertical plane and the point must 80% of the implied bin.
+3. geom_count and geom_jitter are two different ways of dealing with overplotting. in geom_count the number of points at the same position are counted and mapped. the size of the poin indicates the number of points at that same position. geom_jitter gives eachpoint a little random variation to sperate out the individual points.
+4. The default position adustment for geom_boxplot is dodge. 
+
+```{r}
+ ggplot(data = mpg, mapping = aes(x=drv, y=cty, fill=as.factor(cyl)))+geom_boxplot(position='dodge')
+```
+
+####Exercises 3.8.1
+1. Making a stacked bar graph into a pie chart:
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity))
+```
+
+changed to:
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity))+coord_polar()
+```
+
+2. The labs() function allows you to lable the chart, x and y axis.
+3. coord_map projects a portion of the earth, which is approximately spherical, onto a flat 2D plane using any projection defined by the mapproj package. Map projections do not, in general, preserve straight lines, so this requires considerable computation.coord_quickmap is a quick approximation that does preserve straight lines. It works best for smaller areas closer to the equator.
+4. the coord_fixed() function ensures that the ratios of the x and y axis are the same for a better comparison. geom_abline draws a diagonal line on the graph with the specified intercepts or default of 0.
+
+####Practice 4.4
+1. I gues this code does not work because there is a dot over the i missing in the word variable
+2. The word data is spelt wrong in the first code and filter is plet wrong in the next line and a == is reqired. and in the final line the s was left off diamonds.
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+```{r}
+library(tidyverse)
+filter(mpg, cyl == 8)
+```
+
+```{r}
+library(tidyverse)
+filter(diamonds, carat > 3)
+```
+
+3. Alt+shift+K takes you to a menue of the shortcuts used in R studio. These are also listed in the drop down menue bars next to each comand.
+
+####Graph of Style Elongation at 35C and 25C
+
+```{r}
+library(ggplot2)
+Style_Elong_Temp <- read_csv("~/Rclub-r4ds_Nicky.Creux/Style_Elong_Temp.csv")
+ggplot(data = Style_Elong_Temp, mapping = aes(x = Time, y = Length, group=Temp)) + geom_point(mapping = aes(color = Temp)) +   geom_smooth(mapping = aes (color = Temp))
+```
+
+
