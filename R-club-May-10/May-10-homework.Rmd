@@ -1,0 +1,98 @@
+---
+title: "May-10-homework"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 10 May 2017
+
+#### Exercises 5.2.4
+
+1. Find all flights that:
+
+1.1 An arrival delay of two or more hours
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+filter(flights, arr_delay >= 120)
+```
+
+1.2 Flew to Houston
+```{r}
+filter(flights, dest == 'IAH' | dest == 'HOU')
+```
+
+1.3 Were operated by United, American, or Delta
+```{r}
+filter(flights, carrier == 'UA' | carrier == 'AA'| carrier == 'DL')
+```
+
+1.4 Departed in summer (July, August, and September)
+```{r}
+filter(flights, month %in% c(7 ,8 ,9))
+```
+
+1.5 Arrived more than two hours late, but didn’t leave late
+```{r}
+filter(flights, arr_delay >= 120, dep_delay == 0)
+```
+
+1.6 Were delayed by at least an hour, but made up over 30 minutes in flight
+```{r}
+filter(flights, arr_delay <= 30, dep_delay >= 60)
+```
+
+1.6 Departed between midnight and 6am (inclusive)
+```{r}
+filter(flights, dep_time <=600 | dep_time == 2400)
+```
+
+2. The between() functionis a short cut to define the left and right boundries for a variable. I could use this to simplify the codes for challenge 4 and 6.
+
+   > filter(flights, between (month, 7, 9))  
+   > filter(flights, between (dep_time, 1, 600))
+
+3. There are 8255 flights that have missing depart times.There are also missing values for dep_delay, arr_time, arr_delay and air_time. My guess is that these planes were cancelled or did not arrive or depart as expected.
+```{r}
+summary(flights)
+```
+
+4. 
+
+NA ^ 0 evaluates to 1 because anything to the power of 0 is 1, so although we didn't know the original value, we know it's being taken to the zeroth power.  
+
+With NA | TRUE, since the | operator returns TRUE if either of the terms are true, the whole expression returns true because the right half returns true. This is easier to see in an expression like NA | 5<10 (since 5 is indeed less than 10).  
+
+For the next example, we know that & returns TRUE when both terms are true. So, for example, TRUE & TRUE evaluates to TRUE. In FALSE & NA, one of the terms is false, so the expression evaluates to FALSE. As does something like FALSE & TRUE.  
+
+NA * 0 could be argued to be because the NA could represent Inf, and Inf * 0 is NaN (Not a Number), rather than NA. However, I suspect that these results are dictated as much by what answer is natural, quick and sensible in C as by mathematical edge cases.
+
+#### 5.3.1 Exercises
+1. Sort all missing values to the start:
+```{r}
+arrange(flights, desc(is.na(dep_time)))
+```
+
+2. Sort flights to find most delayed flights and find the flights that left earliest
+```{r}
+arrange(flights, dep_delay)
+```
+
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+3. Sort flights to find the fastest flights
+```{r}
+arrange(flights, distance, air_time)
+```
+
+4.which flights travelled longest?
+```{r}
+arrange(flights, desc(distance, air_time))
+```
+
