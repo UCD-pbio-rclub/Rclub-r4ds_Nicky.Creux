@@ -121,8 +121,15 @@ filter(diamonds, carat > 3)
 
 ```{r}
 library(ggplot2)
-Style_Elong_Temp <- read_csv("~/Rclub-r4ds_Nicky.Creux/Style_Elong_Temp.csv")
+Style_Elong_Temp <- read_csv("~/Rclub-r4ds_Nicky.Creux/Style_Elong_Temp.csv"
 ggplot(data = Style_Elong_Temp, mapping = aes(x = Time, y = Length, group=Temp)) + geom_point(mapping = aes(color = Temp)) +   geom_smooth(mapping = aes (color = Temp))
 ```
 
+two plots next to each other:
+make two individual plots...call each an object
+use function grid_arrange (in the package called grid extra) to plot two objects together
+you can change the width of the bars for each graph individually
 
+cowplot can also do this
+
+ggsignif is an add on package to put stars on the graphs for significance
