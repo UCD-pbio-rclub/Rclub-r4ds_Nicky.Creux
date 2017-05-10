@@ -96,3 +96,14 @@ arrange(flights, distance, air_time)
 arrange(flights, desc(distance, air_time))
 ```
 
+
+#### 5.4.1 Exercises
+
+1. Different ways of selecting dep_time, dep_delay, arr_time, and arr_delay from flights.
+    1. select(flights, dep_time, dep_delay, arr_time, arr_delay)  
+    2. select(flights, dep_time, dep_delay:arr_time, arr_delay)  
+    3. select(flights, starts_with("dep"), starts_with("arr"))  
+    4. select(flights, ends_with("time"), ends_with("delay"))  
+
+2. When you repeat a variable twice in the select() function you just get the variable selected once
+
