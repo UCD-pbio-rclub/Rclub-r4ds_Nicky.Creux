@@ -1,28 +1,79 @@
 ---
 title: "R-Club-homework_17May"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Homework 17 May 2017
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+### Exercises 5.6.7
+1.brainstorm different ways to assess the typical delay charactaristics of a group of flights:
+```{r}
+library(tidyverse)
+library(nycflights13)
+delay_char <- flights %>% group_by(flight, tailnum) %>% summarise(n = n(), fifteen_early = mean(arr_delay == -15, na.rm = TRUE), fifteen_late = mean(arr_delay == 15, na.rm = TRUE), ten_always = mean(arr_delay == 10, na.rm = TRUE), thirty_early = mean(arr_delay == -30, na.rm = TRUE), thirty_late = mean(arr_delay == 30, na.rm = TRUE), percentage_on_time = mean(arr_delay == 0, na.rm = TRUE), twohours = mean(arr_delay > 120, na.rm = TRUE)) %>% map_if(is_double, round, 2) %>% as_tibble()
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+1.1 A flight is 15 minutes early 50% of the time, and 15 minutes late 50% of the time  
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+delay_char %>% filter(fifteen_early == 0.5, fifteen_late == 0.5)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+1.2. A flight is always 10 minutes late.
+
+```{r}
+delay_char %>% filter(ten_always == 1)
+```
+
+1.3. A flight is 30 minutes early 50% of the time, and 30 minutes late 50% of the time
+```{r}
+delay_char %>% filter(thirty_early == 0.5, thirty_late == 0.5)
+```
+
+1.4. 99% of the time a flight is on time. 1% of the time it’s 2 hours late.
+```{r}
+delay_char %>% filter(percentage_on_time == 0.99 & twohours == 0.01)
+```
+
+Which is more important: arrival delay or departure delay?
+_I think arrival dely because they are asking about the timing of the flights arriving_
+
+2. Come up with another approach that will give you the same output as **not_cancelled %>% count(dest)** and **not_cancelled %>% count(tailnum, wt = distance)** (without using count()).
+```{r}
+not_cancelled <-  flights %>% filter(!is.na(dep_delay), !is.na(arr_delay))
+not_cancelled %>%  group_by(dest) %>%  summarise(n = n())
+```
+
+3.Our definition of cancelled flights **(is.na(dep_delay) | is.na(arr_delay) )** is slightly suboptimal. Why? Which is the most important column?
+_This is suboptimal because it searches both columns but if the flight did not depart then it was probably canceled so we probably only need (is.na(dep_delay))._
+```{r}
+flights %>% filter(is.na(dep_delay)|is.na(arr_delay))
+```
+
+```{r}
+flights %>% filter(is.na(dep_delay))
+```
+
+4. Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+```{r}
+ flights %>% group_by(day) %>% summarise(cancelled = mean(is.na(dep_delay)), mean_dep = mean(dep_delay, na.rm = T), mean_arr = mean(arr_delay, na.rm = T)) %>% ggplot(aes(y = cancelled)) + geom_point(aes(x = mean_dep), colour = "red") + geom_point(aes(x = mean_arr), colour = "blue") + labs(x = "Avg delay per day", y = "Cancelled flights p day")
+```
+_The number of cancelled flights increases and the ave delay per day increases._
+
+5. Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n())).
+
+```{r}
+flights %>% group_by(carrier, dest) %>% summarise(dep_delay = n()) %>% ggplot(aes(y = dep_delay)) + geom_point(aes(x = carrier), color = "blue")
+```
+
+_Looks like EV has more late flights but it looks like UA has the more longer delays overall._
+
+6. What does the **sort** argument to **count()** do. When might you use it?
+_ you can use this to sort a set of data based on the counts_
